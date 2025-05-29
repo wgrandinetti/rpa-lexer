@@ -19,20 +19,18 @@ IDENTIFIER  {LETTER}({LETTER}|{DIGIT})*
 WHITESPACE  [ \t\r]+
 NEWLINE     [\n]
 
-%x COMMENT DIRECTIVE STRING_MODE
+%x COMMENT DIRECTIVE STRING_MODE COMMENT_BRACE COMMENT_PAREN COMMENT_BACKSLASH
 
 %%
 
-<INITIAL>"(*"            { BEGIN(COMMENT); }
-<INITIAL>"{"             { BEGIN(COMMENT); }
-<COMMENT>"*)"            { BEGIN(INITIAL); }
-<COMMENT>"}"             { BEGIN(INITIAL); }
-<COMMENT>"(*"            { /* Comentario anidado */ }
-<COMMENT>"{"             { /* Comentario anidado */ }
-<COMMENT>[^*{}\n]+       { /* Ignorar texto del comentario */ }
-<COMMENT>\n              { /* Mantener seguimiento de líneas */ }
-<COMMENT>"*"+[^*)\n]*    { /* Asteriscos no seguidos de ) */ }
-<COMMENT>"{"+[^}\n]*     { /* Llaves no seguidas de } */ }
+"(*"                     { BEGIN(COMMENT_PAREN); /* Capturar los comentarios con (* *) */}
+<COMMENT_PAREN>"*)"      { BEGIN(INITIAL); }
+
+"{"                      { BEGIN(COMMENT_BRACE); /* Capturar los comentarios con {} */ }
+<COMMENT_BRACE>"}"       { BEGIN(INITIAL); }
+<COMMENT_BRACE>[^}]*     { /* ignorar contenido del comentario */ }
+<COMMENT_BRACE>\n        { /* ignorar nueva línea en comentario */ }
+
 
 <INITIAL>"{$"            { BEGIN(DIRECTIVE); }
 <DIRECTIVE>"}"           { BEGIN(INITIAL); }

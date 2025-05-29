@@ -1,0 +1,18 @@
+CC=gcc
+CFLAGS=-I/usr/include/CUnit -lcunit
+TESTS=test_hello.o
+TARGET=test_runner
+
+all: $(TARGET)
+
+$(TARGET): $(TESTS)
+	$(CC) -o $(TARGET) $(TESTS) $(CFLAGS)
+
+%.o: %.c
+	$(CC) -c $< $(CFLAGS)
+
+run: $(TARGET)
+	./$(TARGET)
+
+clean:
+	rm -f $(TARGET) $(TESTS)
