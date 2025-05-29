@@ -1,0 +1,7 @@
+*.lpr
+*.c
+*.h
+*.bak
+*.exe
+*.old
+out/

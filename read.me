@@ -1,0 +1,4 @@
+flex scanner.l
+bison -d parser.y
+& 'C:\Program Files\CodeBlocks\MinGW\bin\gcc.exe' lex.yy.c parser.tab.c -o contar_sentencias
+Get-Content .\venecia_solo_barras.lpr | .\contar_sentencias.exe
