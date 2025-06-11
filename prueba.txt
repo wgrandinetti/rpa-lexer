@@ -1,5 +1,10 @@
-{ Esto es un comentario }
+{ Esto es un comentario con llaves }
 Esto esta fuera del comentario
-{ Este es el segundo comentario }
+(* Este es el segundo comentario con parentesis *)
 Esto esta fuera del segundo comentario
-{ Aca viene un comentario anidado {Este comentario esta anidado} y ahora sigue }
+// Aca viene un comentario con backslash
+Esto esta fuera del tercer comentario
+
+Este texto tiene un comentario (* ACA *) y luego
+vienen otro comentario con llaves { ACA } y finalmente 
+un comentario de backslash // ACA

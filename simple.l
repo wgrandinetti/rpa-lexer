@@ -1,7 +1,3 @@
-%{
-int brace_comment_level = 0;
-%}
-
 DIGIT       [0-9]
 LETTER      [a-zA-Z_]
 IDENTIFIER  {LETTER}({LETTER}|{DIGIT})*
@@ -12,21 +8,20 @@ NEWLINE     [\n]
 
 %%
 
-"(*"                     { BEGIN(COMMENT_PAREN); /* Capturar los comentarios con (* *) */}
+"(*"                     { BEGIN(COMMENT_PAREN); /* Capturar los comentarios con (* *) */ }
 <COMMENT_PAREN>"*)"      { BEGIN(INITIAL); }
+<COMMENT_PAREN>[^\n()*]+   { /* ignora texto dentro del comentario */ }
+<COMMENT_PAREN>.           { /* ignora cualquier otro caracter */ }
+<COMMENT_PAREN>\n          { /* ignora saltos de línea */ }
+
+"{"                     { BEGIN(COMMENT_BRACE); /* Capturar los comentarios con {} */ }
+<COMMENT_BRACE>"}"      { BEGIN(INITIAL); }
+<COMMENT_BRACE>[^}]+    { /* ignora cualquier cosa */ }
 
 
-"{"                     { /* Capturar los comentarios con {} con posible anidamiento */
-                            brace_comment_level = 1;
-                            BEGIN(COMMENT_BRACE);
-                        }
-<COMMENT_BRACE>"{"      { /* Si aparece una llave que abre dentro de un comentario incrementa el nivel */
-                            brace_comment_level++;
-                        }
-<COMMENT_BRACE>"}"      { /* Decrementa el nivel y si llega a 0 cambia el estado */
-                            brace_comment_level--;
-                            if (brace_comment_level == 0)
-                                BEGIN(INITIAL);
-                        }
-<COMMENT_BRACE>[^{}]*   { /* ignorar cualquier cosa diferente a { o }  */ }
+"//"                        { BEGIN(COMMENT_BACKSLASH); /* Capturar los comentarios con // */ }
+<COMMENT_BACKSLASH>\n       { BEGIN(INITIAL); }
+<COMMENT_BACKSLASH>[^\n]+   { /* ignora cualquier cosa */ }
+
+
 %%
